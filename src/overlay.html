@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AugenSchonen Overlay</title>
+    <link rel="stylesheet" href="overlay.css" />
+    <script type="module" src="overlay.js" defer></script>
+  </head>
+  <body>
+    <div id="overlay-card" class="overlay-card hidden">
+      <div class="overlay-header">
+        <span id="overlay-title">Gleich Augenpause</span>
+        <span id="overlay-countdown" class="overlay-countdown">--:--</span>
+      </div>
+      <p id="overlay-hint" class="overlay-hint">
+        Schau 5 Minuten aus dem Fenster oder in die Ferne.
+      </p>
+      <div id="overlay-buttons" class="overlay-buttons">
+        <button id="btn-snooze" type="button">+5 Min. verlängern</button>
+        <button id="btn-break-now" type="button">Pause jetzt starten</button>
+        <button id="btn-skip" type="button" class="hidden">Überspringen</button>
+      </div>
+    </div>
+  </body>
+</html>

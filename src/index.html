@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AugenSchonen — Einstellungen</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="main.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>👁️ AugenSchonen</h1>
+        <p class="subtitle">Stündliche Augenpausen, automatisch.</p>
+        <div id="timer-strip" class="timer-strip">
+          <span id="timer-phase">–</span>
+          <span id="timer-remaining" class="timer-remaining">--:--</span>
+        </div>
+      </header>
+
+      <form id="settings-form">
+        <section class="card">
+          <h2>Timer</h2>
+          <div class="field">
+            <label for="interval">Aktives Intervall (Minuten)</label>
+            <input type="number" id="interval" min="1" max="480" required />
+            <small>Nach dieser Zeit aktiver Nutzung wird eine Pause fällig.</small>
+          </div>
+          <div class="field">
+            <label for="break">Pausenlänge (Minuten)</label>
+            <input type="number" id="break" min="1" max="60" required />
+          </div>
+          <div class="field">
+            <label for="idle">Inaktivitäts-Puffer (Minuten)</label>
+            <input type="number" id="idle" min="1" max="60" required />
+            <small>Bist du länger als das inaktiv, pausiert der Timer automatisch.</small>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Schwierigkeitsgrad</h2>
+          <div class="difficulty-group" role="radiogroup">
+            <label class="difficulty">
+              <input type="radio" name="difficulty" value="locker" />
+              <span class="difficulty-title">Locker</span>
+              <span class="difficulty-desc">Hinweis ist sofort wegklickbar, unbegrenzt verlängerbar.</span>
+            </label>
+            <label class="difficulty">
+              <input type="radio" name="difficulty" value="normal" />
+              <span class="difficulty-title">Normal</span>
+              <span class="difficulty-desc">Kurze Wartezeit vorm Wegklicken, max. 2x verlängern.</span>
+            </label>
+            <label class="difficulty">
+              <input type="radio" name="difficulty" value="streng" />
+              <span class="difficulty-title">Streng</span>
+              <span class="difficulty-desc">Kein Verlängern — nach Ablauf wird der PC gesperrt.</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Allgemein</h2>
+          <div class="field">
+            <label for="theme">Design</label>
+            <select id="theme">
+              <option value="system">System</option>
+              <option value="light">Hell</option>
+              <option value="dark">Dunkel</option>
+            </select>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input type="checkbox" id="autostart" />
+              Mit dem System starten
+            </label>
+          </div>
+        </section>
+
+        <footer>
+          <button type="submit" id="save-btn">Speichern</button>
+          <span id="save-status" role="status"></span>
+        </footer>
+      </form>
+    </main>
+  </body>
+</html>

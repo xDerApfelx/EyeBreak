@@ -1,0 +1,96 @@
+use serde::{Deserialize, Serialize};
+use std::{fs, path::PathBuf, sync::Mutex};
+use tauri::{AppHandle, Manager, State};
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum Difficulty {
+    Locker,
+    Normal,
+    Streng,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default, rename_all = "camelCase")]
+pub struct Settings {
+    /// Länge eines aktiven Intervalls in Minuten (Standard: 60)
+    pub interval_minutes: u32,
+    /// Länge der Augenpause in Minuten (Standard: 5)
+    pub break_minutes: u32,
+    /// Inaktivität in Minuten, ab der der Timer pausiert (Standard: 5)
+    pub idle_buffer_minutes: u32,
+    pub difficulty: Difficulty,
+    /// "system" | "light" | "dark"
+    pub theme: String,
+    pub autostart: bool,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            interval_minutes: 60,
+            break_minutes: 5,
+            idle_buffer_minutes: 5,
+            difficulty: Difficulty::Normal,
+            theme: "system".into(),
+            autostart: true,
+        }
+    }
+}
+
+pub struct ConfigState(pub Mutex<Settings>);
+
+fn config_path(app: &AppHandle) -> Option<PathBuf> {
+    app.path()
+        .app_config_dir()
+        .ok()
+        .map(|dir| dir.join("config.json"))
+}
+
+pub fn load(app: &AppHandle) -> Settings {
+    config_path(app)
+        .and_then(|path| fs::read_to_string(path).ok())
+        .and_then(|raw| serde_json::from_str(&raw).ok())
+        .unwrap_or_default()
+}
+
+pub fn save(app: &AppHandle, settings: &Settings) -> Result<(), String> {
+    let path = config_path(app).ok_or("Konfigurationsverzeichnis nicht ermittelbar")?;
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    let raw = serde_json::to_string_pretty(settings).map_err(|e| e.to_string())?;
+    fs::write(path, raw).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn get_settings(state: State<ConfigState>) -> Settings {
+    state.0.lock().unwrap().clone()
+}
+
+#[tauri::command]
+pub fn set_settings(
+    app: AppHandle,
+    state: State<ConfigState>,
+    settings: Settings,
+) -> Result<(), String> {
+    // Autostart-Änderung sofort im OS registrieren
+    {
+        use tauri_plugin_autostart::ManagerExt;
+        let autolaunch = app.autolaunch();
+        let result = if settings.autostart {
+            autolaunch.enable()
+        } else {
+            autolaunch.disable()
+        };
+        if let Err(e) = result {
+            // Im Dev-Build zeigt der Autostart auf das Dev-Binary — nicht fatal
+            eprintln!("Autostart konnte nicht gesetzt werden: {e}");
+        }
+    }
+    save(&app, &settings)?;
+    *state.0.lock().unwrap() = settings;
+    // Neue Intervall-/Pausenwerte gelten ab sofort — Timer neu starten
+    crate::timer::reset(&app);
+    Ok(())
+}

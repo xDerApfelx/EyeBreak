@@ -8,10 +8,6 @@
 
 EyeBreak is a tiny tray app that reminds you to look away from your screen every hour — with an overlay that even shows up over your games. Built because manual timers get dismissed and forgotten, and eye doctors keep being right.
 
-<p align="center">
-  <img src="docs/screenshot-settings.png" width="380" alt="Settings window" />
-</p>
-
 ## Table of Contents
 
 - [Download & Install 📥](#download--install-)

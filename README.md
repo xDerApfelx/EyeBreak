@@ -1,16 +1,23 @@
-# 👁️ EyeBreak
+<p align="center">
+  <img src="docs/icon.png" width="96" alt="EyeBreak icon" />
+</p>
 
-**Your eyes need breaks. You forget them. EyeBreak doesn't.**
+<h1 align="center">EyeBreak</h1>
 
-EyeBreak is a tiny desktop app that reminds you to look away from your screen every hour — with an overlay that even shows up over your games. Built because manual timers get dismissed and forgotten, and eye doctors keep being right.
+<p align="center"><b>Your eyes need breaks. You forget them. EyeBreak doesn't.</b></p>
+
+EyeBreak is a tiny tray app that reminds you to look away from your screen every hour — with an overlay that even shows up over your games. Built because manual timers get dismissed and forgotten, and eye doctors keep being right.
+
+<p align="center">
+  <img src="docs/screenshot-settings.png" width="380" alt="Settings window" />
+  <img src="docs/screenshot-overlay.png" width="380" alt="Overlay countdown" />
+</p>
 
 ## Table of Contents
 
 - [Download & Install 📥](#download--install-)
-- [User Guide](#user-guide)
+- [How to Use](#how-to-use)
 - [Core Features](#core-features)
-- [How it Works](#how-it-works)
-- [The Story behind EyeBreak 🚀](#the-story-behind-eyebreak-)
 - [⚠️ Flaws & Limitations](#️-flaws--limitations)
 - [Platform Support](#platform-support)
 - [❓ FAQ](#-faq)
@@ -21,18 +28,18 @@ EyeBreak is a tiny desktop app that reminds you to look away from your screen ev
 
 ## Download & Install 📥
 
-Grab the latest release for your platform:
+Grab the latest release for your platform from the [Releases page](https://github.com/xDerApfelx/EyeBreak/releases):
 
 - 🪟 **Windows**: `EyeBreak_x.x.x_x64-setup.exe` (installer) or `.msi`
 - 🐧 **Linux**: `.AppImage` (portable) or `.deb`
 - 🍎 **macOS**: `.dmg`
 
-Install it, start it once, done. EyeBreak lives in your system tray — there is no main window cluttering your taskbar.
+Install it, start it once, done. EyeBreak lives in your system tray — no window cluttering your taskbar.
 
-## User Guide
+## How to Use
 
-1. **Start EyeBreak.** It sits in your tray (look for the icon with the green dot).
-2. **Left-click the tray icon** to open settings: interval length, break length, difficulty, language (English/German), dark/light theme, autostart.
+1. **Start EyeBreak.** It sits in your tray (look for the eye icon with the green dot).
+2. **Left-click the tray icon** to open settings: interval and break length, difficulty, language (English/German), dark/light theme, autostart.
 3. **Keep doing your thing.** After an hour of active use (default), the overlay appears in the top-right corner and counts down to your break.
 4. **Take the break.** Look out the window, stare into the distance, pet your cat. After 5 minutes, the next hour starts automatically.
 
@@ -55,27 +62,16 @@ The overlay is **click-through** — it never steals your mouse from a game. Hov
 - 👻 **Click-through overlay** — visible over borderless-fullscreen games, invisible to your mouse until you hover on it
 - 🚦 **Tray status light** — green: running, yellow: update available, red: something broke
 - 🌍 **English & German**, dark & light theme, everything configurable
-
-## How it Works
-
-EyeBreak runs a state machine with three states: **Active** (counting down your hour), **Idle-Paused** (you left — timer frozen), and **Break** (countdown until your eyes are allowed back).
-
-- Input activity is read from the OS (`GetLastInputInfo` on Windows) — EyeBreak never logs *what* you type, only *that* you typed.
-- Game detection reads the launchers' own manifest files (the same technique [DLSS Swapper](https://github.com/beeradmoore/dlss-swapper) uses) — no game database to maintain.
-- The overlay is a transparent always-on-top window that ignores mouse events until you deliberately hover it.
-
-## The Story behind EyeBreak 🚀
-
-Two friends, too many 5-hour gaming sessions, one eye doctor's advice: *look away for a few minutes every hour.* Phone timers? Dismissed and forgotten. So we did the only reasonable thing programmers do — spent hours building a tool to save minutes. This is that tool, and honestly, our eyes feel better already.
+- 🔒 **No tracking** — input activity is read only as *did something happen* and *keys per minute*. No content, no logging, no network calls except the update check against GitHub.
 
 ## ⚠️ Flaws & Limitations
 
 Honesty is important:
 
-- **Exclusive-fullscreen games** (mostly old DirectX 9 titles) render below the overlay. That would need DLL injection like Discord's overlay — we deliberately don't do that. Borderless fullscreen (the default in modern games) works fine.
+- **Exclusive-fullscreen games** (mostly old DirectX 9 titles) render below the overlay. Fixing that would need DLL injection like Discord's overlay — we deliberately don't do that. Borderless fullscreen (the default in modern games) works fine.
 - **Strict mode locks your session** — it never closes anything, but if that scares you, stay on Normal.
-- **Flow detection counts keystrokes only** — a fast typing session extends your hour, mouse-only work doesn't.
-- **The overlay is on your primary monitor only** (for now).
+- **Flow detection counts keystrokes only** — mouse-only work doesn't extend the hour.
+- **The overlay lives on your primary monitor** (for now).
 - Expect bugs. It's young software.
 
 ## Platform Support
@@ -93,7 +89,7 @@ Windows is the primary platform. macOS and Linux are best-effort — the core ti
 ## ❓ FAQ
 
 **Does EyeBreak track what I type?**
-No. It reads *whether* input happened (for idle detection) and *how many* keys per minute (for flow detection). No content, no logging, no network — your data never leaves your machine.
+No. It reads *whether* input happened (idle detection) and *how many* keys per minute (flow detection). No content, no logging — your data never leaves your machine.
 
 **Why does it want to start with my PC?**
 Because a break reminder you have to remember to start is a paradox. It's optional — toggle it in settings.
@@ -105,11 +101,11 @@ Sure — set the interval to 20 minutes and the break to 1 minute.
 Your game probably runs in exclusive fullscreen. Switch it to *borderless fullscreen* — you get faster alt-tabbing as a bonus.
 
 **Something broke!**
-Open an issue. Include your OS, what you did, and what happened instead of the expected thing.
+Open an [issue](https://github.com/xDerApfelx/EyeBreak/issues). Include your OS, what you did, and what happened instead of the expected thing.
 
 ## For Nerds 🤓
 
-Built with [Tauri 2](https://tauri.app) — Rust backend, vanilla HTML/CSS/JS frontend, ~30 MB RAM, no Electron.
+Built with [Tauri 2](https://tauri.app) — Rust backend, vanilla HTML/CSS/JS frontend, ~30 MB RAM, no Electron. Game detection reads the launchers' own manifest files (the same technique [DLSS Swapper](https://github.com/beeradmoore/dlss-swapper) uses) — no game database to maintain.
 
 ```sh
 npm install
@@ -122,11 +118,9 @@ Prerequisites: [Rust](https://rustup.rs/), Node.js, and on Windows the VS Build 
 Releases are built automatically by GitHub Actions for all three platforms on every `v*` tag.
 
 <details>
-<summary>Enabling update notifications & auto-update (maintainers)</summary>
+<summary>Enabling full silent auto-update (maintainers)</summary>
 
-- Update notification (yellow tray dot): set `UPDATE_REPO` in `src-tauri/src/updater.rs` to `Some("owner/repo")`.
-- Full silent auto-update (Windows/Linux): generate a signing key pair (`npm run tauri signer generate`), add the public key and endpoint to `tauri.conf.json` (`plugins.updater`), set `bundle.createUpdaterArtifacts: true`, wire up `tauri-plugin-updater`, and store the private key as the `TAURI_SIGNING_PRIVATE_KEY` GitHub secret.
-- macOS auto-update additionally requires Apple notarization (99 $/year) — deliberately postponed.
+Update *notifications* (yellow tray dot) already work via the GitHub Releases API. For full silent auto-update on Windows/Linux: generate a signing key pair (`npm run tauri signer generate`), add the public key and endpoint to `tauri.conf.json` (`plugins.updater`), set `bundle.createUpdaterArtifacts: true`, wire up `tauri-plugin-updater`, and store the private key as the `TAURI_SIGNING_PRIVATE_KEY` GitHub secret. macOS additionally requires Apple notarization (99 $/year) — deliberately postponed.
 
 </details>
 

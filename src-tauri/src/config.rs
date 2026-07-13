@@ -54,10 +54,23 @@ fn config_path(app: &AppHandle) -> Option<PathBuf> {
 }
 
 pub fn load(app: &AppHandle) -> Settings {
-    config_path(app)
+    let settings = config_path(app)
         .and_then(|path| fs::read_to_string(path).ok())
         .and_then(|raw| serde_json::from_str(&raw).ok())
-        .unwrap_or_default()
+        .unwrap_or_default();
+    sanitize(settings)
+}
+
+/// Hält handeditierte Configs im gültigen Bereich — ein Intervall von 0
+/// würde den Timer sonst in eine Endlosschleife aus Sofort-Pausen schicken.
+fn sanitize(mut settings: Settings) -> Settings {
+    settings.interval_minutes = settings.interval_minutes.clamp(1, 480);
+    settings.break_minutes = settings.break_minutes.clamp(1, 60);
+    settings.idle_buffer_minutes = settings.idle_buffer_minutes.clamp(1, 60);
+    if !["de", "en"].contains(&settings.language.as_str()) {
+        settings.language = "de".into();
+    }
+    settings
 }
 
 pub fn save(app: &AppHandle, settings: &Settings) -> Result<(), String> {
@@ -80,6 +93,7 @@ pub fn set_settings(
     state: State<ConfigState>,
     settings: Settings,
 ) -> Result<(), String> {
+    let settings = sanitize(settings);
     // Autostart-Änderung sofort im OS registrieren
     {
         use tauri_plugin_autostart::ManagerExt;

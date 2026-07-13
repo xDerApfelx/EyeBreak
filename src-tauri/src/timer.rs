@@ -115,6 +115,10 @@ pub fn reset(app: &AppHandle) {
     let state = app.state::<TimerState>();
     let mut core = state.0.lock().unwrap();
     *core = TimerCore::new(interval);
+    drop(core);
+    // Falls der Reset mitten in einer Streng-Pause passiert, darf der
+    // Vollbild-Blocking-Modus nicht hängen bleiben
+    overlay::set_blocking(app, false);
 }
 
 pub fn spawn(app: AppHandle) {

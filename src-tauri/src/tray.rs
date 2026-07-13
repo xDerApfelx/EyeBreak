@@ -13,7 +13,8 @@ pub enum TrayStatus {
     Ok,
     /// Gelb — Update verfügbar
     UpdateAvailable,
-    /// Rot — etwas ist schiefgelaufen
+    /// Rot — etwas ist schiefgelaufen (für künftiges Fehler-Reporting reserviert)
+    #[allow(dead_code)]
     Error,
 }
 

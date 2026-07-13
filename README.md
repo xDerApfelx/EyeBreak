@@ -104,7 +104,7 @@ Open an [issue](https://github.com/xDerApfelx/EyeBreak/issues). Include your OS,
 
 ## For Nerds 🤓
 
-Built with [Tauri 2](https://tauri.app) — Rust backend, vanilla HTML/CSS/JS frontend, ~30 MB RAM, no Electron. Game detection reads the launchers' own manifest files (the same technique [DLSS Swapper](https://github.com/beeradmoore/dlss-swapper) uses) — no game database to maintain.
+Built with [Tauri 2](https://tauri.app) — Rust backend, vanilla HTML/CSS/JS frontend rendered by the system WebView (no bundled Chromium like Electron). Game detection reads the launchers' own manifest files (the same technique [DLSS Swapper](https://github.com/beeradmoore/dlss-swapper) uses) — no game database to maintain.
 
 ```sh
 npm install

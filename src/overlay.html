@@ -2,23 +2,24 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>AugenSchonen Overlay</title>
+    <title>EyeBreak Overlay</title>
     <link rel="stylesheet" href="overlay.css" />
     <script type="module" src="overlay.js" defer></script>
   </head>
   <body>
     <div id="overlay-card" class="overlay-card hidden">
       <div class="overlay-header">
-        <span id="overlay-title">Gleich Augenpause</span>
+        <span id="overlay-title">EyeBreak</span>
         <span id="overlay-countdown" class="overlay-countdown">--:--</span>
       </div>
-      <p id="overlay-hint" class="overlay-hint">
-        Schau 5 Minuten aus dem Fenster oder in die Ferne.
-      </p>
+      <p id="overlay-hint" class="overlay-hint"></p>
       <div id="overlay-buttons" class="overlay-buttons">
-        <button id="btn-snooze" type="button">+5 Min. verlängern</button>
-        <button id="btn-break-now" type="button">Pause jetzt starten</button>
-        <button id="btn-skip" type="button" class="hidden">Überspringen</button>
+        <button id="btn-snooze" type="button"></button>
+        <button id="btn-break-now" type="button"></button>
+        <button id="btn-skip" type="button" class="hidden"></button>
+      </div>
+      <div class="duochrome" role="presentation">
+        <span class="duo-red"></span><span class="duo-green"></span>
       </div>
     </div>
   </body>

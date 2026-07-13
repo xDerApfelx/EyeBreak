@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "AugenSchonen",
+  "productName": "EyeBreak",
   "version": "0.1.0",
-  "identifier": "com.augenschonen.app",
+  "identifier": "com.eyebreak.app",
   "build": {
     "frontendDist": "../src"
   },
@@ -11,7 +11,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "AugenSchonen",
+        "title": "EyeBreak",
         "width": 520,
         "height": 680,
         "resizable": true,

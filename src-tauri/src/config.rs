@@ -23,6 +23,10 @@ pub struct Settings {
     /// "system" | "light" | "dark"
     pub theme: String,
     pub autostart: bool,
+    /// Overlay dauerhaft zeigen statt nur in den letzten 10 Minuten
+    pub overlay_always_visible: bool,
+    /// "de" | "en"
+    pub language: String,
 }
 
 impl Default for Settings {
@@ -34,6 +38,8 @@ impl Default for Settings {
             difficulty: Difficulty::Normal,
             theme: "system".into(),
             autostart: true,
+            overlay_always_visible: false,
+            language: "de".into(),
         }
     }
 }
@@ -89,8 +95,12 @@ pub fn set_settings(
         }
     }
     save(&app, &settings)?;
-    *state.0.lock().unwrap() = settings;
+    *state.0.lock().unwrap() = settings.clone();
     // Neue Intervall-/Pausenwerte gelten ab sofort — Timer neu starten
     crate::timer::reset(&app);
+    // Tray-Beschriftung folgt der Sprache, alle Fenster bekommen die neuen Settings
+    crate::tray::update_language(&app, &settings.language);
+    use tauri::Emitter;
+    let _ = app.emit("settings-changed", settings);
     Ok(())
 }

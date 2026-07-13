@@ -1,3 +1,7 @@
+/* EyeBreak Overlay — beleuchtete Sehtafel im dunklen Raum.
+   Bewusst immer dunkel (liegt über Spielen), Phase über Duochrom-Streifen:
+   Rot pulsiert = Pause naht, Grün = Pause läuft. */
+
 * {
   box-sizing: border-box;
 }
@@ -7,65 +11,38 @@ body {
   margin: 0;
   background: transparent;
   overflow: hidden;
-  font-family: "Segoe UI", Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   user-select: none;
 }
 
 .overlay-card {
   margin: 6px;
-  padding: 0.7rem 1rem;
-  border-radius: 12px;
-  background: rgba(20, 24, 28, 0.88);
-  color: #eef1f4;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(6px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  padding: 0.65rem 0.9rem 0.55rem;
+  background: rgba(13, 15, 18, 0.92);
+  color: #edf0e8;
+  border: 1px solid rgba(237, 240, 232, 0.35);
+  box-shadow: 0 0 18px rgba(237, 240, 232, 0.12);
+  transition: opacity 0.5s ease;
 }
 
-/* Einblende-Animation beim Auftauchen (10-Minuten-Marke) */
 .overlay-card.appear {
-  animation: slide-in 0.6s ease;
+  animation: illuminate 0.7s ease;
 }
 
-@keyframes slide-in {
+@keyframes illuminate {
   from {
     opacity: 0;
-    transform: translateY(-12px);
+    box-shadow: 0 0 0 rgba(237, 240, 232, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    box-shadow: 0 0 18px rgba(237, 240, 232, 0.12);
   }
 }
 
 .overlay-card.hidden {
   opacity: 0;
   pointer-events: none;
-}
-
-/* Einmaliges Blinken (5-Minuten-Marke) */
-.overlay-card.blink-once {
-  animation: blink 0.5s ease 2;
-}
-
-/* Dauerblinken (ab 1:30) */
-.overlay-card.blink-loop {
-  animation: blink 1s ease infinite;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    background: rgba(20, 24, 28, 0.88);
-  }
-  50% {
-    background: rgba(160, 60, 40, 0.92);
-  }
-}
-
-/* Pausen-Modus: grünlich */
-.overlay-card.break {
-  background: rgba(24, 60, 44, 0.92);
 }
 
 .overlay-header {
@@ -76,31 +53,36 @@ body {
 }
 
 #overlay-title {
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-family: "Bahnschrift SemiCondensed", "Bahnschrift", "Arial Narrow",
+    sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.85rem;
 }
 
 .overlay-countdown {
+  font-family: "Cascadia Mono", Consolas, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   font-weight: 700;
+  text-shadow: 0 0 10px rgba(237, 240, 232, 0.35);
 }
 
 .overlay-hint {
-  margin: 0.25rem 0 0;
-  font-size: 0.8rem;
-  color: rgba(238, 241, 244, 0.75);
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: rgba(237, 240, 232, 0.7);
 }
 
 .overlay-buttons {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.6rem;
+  margin-top: 0.55rem;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
-/* Buttons erst zeigen, wenn das Overlay interaktiv ist (Hover-Dwell) */
 body.interactive .overlay-buttons {
   opacity: 1;
 }
@@ -108,16 +90,20 @@ body.interactive .overlay-buttons {
 .overlay-buttons button {
   flex: 1;
   padding: 0.35rem 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(237, 240, 232, 0.4);
+  background: transparent;
   color: inherit;
-  font-size: 0.8rem;
+  font-family: "Bahnschrift SemiCondensed", "Bahnschrift", "Arial Narrow",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
   cursor: pointer;
 }
 
 .overlay-buttons button:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(237, 240, 232, 0.92);
+  color: #0d0f12;
 }
 
 .overlay-buttons button:disabled {
@@ -127,4 +113,70 @@ body.interactive .overlay-buttons {
 
 .overlay-buttons button.hidden {
   display: none;
+}
+
+/* ---- Duochrom-Streifen als Phasenanzeige ---- */
+
+.duochrome {
+  display: flex;
+  height: 4px;
+  margin: 0.55rem -0.9rem -0.55rem;
+}
+
+.duochrome span {
+  flex: 1;
+}
+
+.duo-red {
+  background: #a33327;
+}
+
+.duo-green {
+  background: #2a6b45;
+}
+
+/* Warnstufen: rote Hälfte pulsiert */
+.overlay-card.warn-soft .duo-red {
+  animation: pulse-red 2s ease infinite;
+}
+
+.overlay-card.warn-hard .duo-red {
+  animation: pulse-red 0.8s ease infinite;
+}
+
+.overlay-card.warn-hard .overlay-countdown {
+  color: #e8654f;
+  text-shadow: 0 0 10px rgba(212, 82, 63, 0.5);
+}
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    background: #a33327;
+  }
+  50% {
+    background: #ef5340;
+  }
+}
+
+/* Pause: alles grün, ruhig */
+.overlay-card.break {
+  border-color: rgba(63, 156, 102, 0.6);
+  box-shadow: 0 0 18px rgba(63, 156, 102, 0.25);
+}
+
+.overlay-card.break .duo-red {
+  background: #2a6b45;
+}
+
+.overlay-card.break .overlay-countdown {
+  color: #6fcf97;
+  text-shadow: 0 0 10px rgba(111, 207, 151, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

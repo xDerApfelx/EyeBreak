@@ -27,12 +27,23 @@ impl TrayStatus {
         }
     }
 
-    fn tooltip(self) -> &'static str {
-        match self {
-            TrayStatus::Ok => "AugenSchonen — läuft",
-            TrayStatus::UpdateAvailable => "AugenSchonen — Update verfügbar",
-            TrayStatus::Error => "AugenSchonen — Fehler, Log prüfen",
+    fn tooltip(self, lang: &str) -> &'static str {
+        match (self, lang) {
+            (TrayStatus::Ok, "en") => "EyeBreak — running",
+            (TrayStatus::Ok, _) => "EyeBreak — läuft",
+            (TrayStatus::UpdateAvailable, "en") => "EyeBreak — update available",
+            (TrayStatus::UpdateAvailable, _) => "EyeBreak — Update verfügbar",
+            (TrayStatus::Error, "en") => "EyeBreak — error, check log",
+            (TrayStatus::Error, _) => "EyeBreak — Fehler, Log prüfen",
         }
+    }
+}
+
+/// Menü-Beschriftungen je Sprache: (Einstellungen, Updates, Beenden)
+fn menu_labels(lang: &str) -> (&'static str, &'static str, &'static str) {
+    match lang {
+        "en" => ("Settings", "Check for updates", "Quit"),
+        _ => ("Einstellungen", "Nach Updates suchen", "Beenden"),
     }
 }
 
@@ -74,14 +85,36 @@ pub fn set_status(app: &AppHandle, status: TrayStatus) {
     if let Some(icon) = status_icon(status) {
         let _ = tray.set_icon(Some(icon));
     }
-    let _ = tray.set_tooltip(Some(status.tooltip()));
+    let lang = current_language(app);
+    let _ = tray.set_tooltip(Some(status.tooltip(&lang)));
 }
 
-pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
-    let settings_item = MenuItem::with_id(app, "settings", "Einstellungen", true, None::<&str>)?;
-    let update_item = MenuItem::with_id(app, "update", "Nach Updates suchen", true, None::<&str>)?;
-    let quit_item = MenuItem::with_id(app, "quit", "Beenden", true, None::<&str>)?;
-    let menu = Menu::with_items(
+fn current_language(app: &AppHandle) -> String {
+    app.state::<crate::config::ConfigState>()
+        .0
+        .lock()
+        .unwrap()
+        .language
+        .clone()
+}
+
+/// Baut das Tray-Menü in der gegebenen Sprache neu auf (nach Sprachwechsel).
+pub fn update_language(app: &AppHandle, lang: &str) {
+    let Some(tray) = app.tray_by_id(TRAY_ID) else {
+        return;
+    };
+    if let Ok(menu) = build_menu(app, lang) {
+        let _ = tray.set_menu(Some(menu));
+    }
+    let _ = tray.set_tooltip(Some(TrayStatus::Ok.tooltip(lang)));
+}
+
+fn build_menu(app: &AppHandle, lang: &str) -> tauri::Result<Menu<tauri::Wry>> {
+    let (settings_label, update_label, quit_label) = menu_labels(lang);
+    let settings_item = MenuItem::with_id(app, "settings", settings_label, true, None::<&str>)?;
+    let update_item = MenuItem::with_id(app, "update", update_label, true, None::<&str>)?;
+    let quit_item = MenuItem::with_id(app, "quit", quit_label, true, None::<&str>)?;
+    Menu::with_items(
         app,
         &[
             &settings_item,
@@ -89,11 +122,16 @@ pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
             &PredefinedMenuItem::separator(app)?,
             &quit_item,
         ],
-    )?;
+    )
+}
+
+pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
+    let lang = current_language(app);
+    let menu = build_menu(app, &lang)?;
 
     TrayIconBuilder::with_id(TRAY_ID)
         .icon(status_icon(TrayStatus::Ok).unwrap_or_else(|| app.default_window_icon().unwrap().clone()))
-        .tooltip(TrayStatus::Ok.tooltip())
+        .tooltip(TrayStatus::Ok.tooltip(&lang))
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| match event.id.as_ref() {

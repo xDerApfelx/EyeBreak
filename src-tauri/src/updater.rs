@@ -38,7 +38,7 @@ pub fn spawn_update_checker(app: AppHandle) {
 fn check_for_update(repo: &str) -> Result<Option<String>, String> {
     let url = format!("https://api.github.com/repos/{repo}/releases/latest");
     let response: serde_json::Value = ureq::get(&url)
-        .set("User-Agent", "AugenSchonen")
+        .set("User-Agent", "EyeBreak")
         .timeout(Duration::from_secs(10))
         .call()
         .map_err(|e| e.to_string())?

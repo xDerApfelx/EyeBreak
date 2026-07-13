@@ -185,9 +185,12 @@ fn tick(app: &AppHandle) {
 
     let _ = app.emit("timer-status", core.status(settings.difficulty));
 
-    // Overlay in den letzten 10 Minuten des Intervalls und während der Pause zeigen
+    // Overlay während der Pause immer zeigen; im aktiven Intervall in den letzten
+    // 10 Minuten — oder dauerhaft, wenn der Nutzer das so eingestellt hat
     let show_overlay = match core.phase {
-        Phase::Active => core.remaining_secs <= OVERLAY_LEAD_SECS,
+        Phase::Active => {
+            settings.overlay_always_visible || core.remaining_secs <= OVERLAY_LEAD_SECS
+        }
         Phase::Break => true,
         Phase::IdlePaused => false,
     };

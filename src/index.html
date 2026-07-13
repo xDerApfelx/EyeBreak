@@ -3,81 +3,109 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AugenSchonen — Einstellungen</title>
+    <title>EyeBreak</title>
     <link rel="stylesheet" href="styles.css" />
     <script type="module" src="main.js" defer></script>
   </head>
   <body>
     <main class="container">
-      <header>
-        <h1>👁️ AugenSchonen</h1>
-        <p class="subtitle">Stündliche Augenpausen, automatisch.</p>
-        <div id="timer-strip" class="timer-strip">
-          <span id="timer-phase">–</span>
-          <span id="timer-remaining" class="timer-remaining">--:--</span>
+      <!-- Snellen-Tafel-Header: E / YE / BREAK wie Sehtafel-Zeilen -->
+      <header class="chart-header" aria-label="EyeBreak">
+        <div class="chart-row chart-row-1">
+          <span class="chart-letters">E</span><span class="chart-acuity">20/200</span>
         </div>
+        <div class="chart-row chart-row-2">
+          <span class="chart-letters">Y E</span><span class="chart-acuity">20/100</span>
+        </div>
+        <div class="chart-row chart-row-3">
+          <span class="chart-letters">B R E A K</span><span class="chart-acuity">20/40</span>
+        </div>
+        <div class="duochrome" role="presentation"><span></span><span></span></div>
       </header>
 
+      <p class="subtitle" data-i18n="subtitle"></p>
+
+      <div id="timer-strip" class="timer-strip">
+        <span id="timer-phase">–</span>
+        <span id="timer-remaining" class="timer-remaining">--:--</span>
+      </div>
+
       <form id="settings-form">
-        <section class="card">
-          <h2>Timer</h2>
+        <section class="section">
+          <h2 class="section-label" data-i18n="sectionTimer"></h2>
           <div class="field">
-            <label for="interval">Aktives Intervall (Minuten)</label>
+            <label for="interval" data-i18n="intervalLabel"></label>
             <input type="number" id="interval" min="1" max="480" required />
-            <small>Nach dieser Zeit aktiver Nutzung wird eine Pause fällig.</small>
+            <small data-i18n="intervalHint"></small>
           </div>
           <div class="field">
-            <label for="break">Pausenlänge (Minuten)</label>
+            <label for="break" data-i18n="breakLabel"></label>
             <input type="number" id="break" min="1" max="60" required />
           </div>
           <div class="field">
-            <label for="idle">Inaktivitäts-Puffer (Minuten)</label>
+            <label for="idle" data-i18n="idleLabel"></label>
             <input type="number" id="idle" min="1" max="60" required />
-            <small>Bist du länger als das inaktiv, pausiert der Timer automatisch.</small>
+            <small data-i18n="idleHint"></small>
           </div>
         </section>
 
-        <section class="card">
-          <h2>Schwierigkeitsgrad</h2>
+        <section class="section">
+          <h2 class="section-label" data-i18n="sectionDifficulty"></h2>
           <div class="difficulty-group" role="radiogroup">
-            <label class="difficulty">
+            <label class="difficulty difficulty-easy">
               <input type="radio" name="difficulty" value="locker" />
-              <span class="difficulty-title">Locker</span>
-              <span class="difficulty-desc">Hinweis ist sofort wegklickbar, unbegrenzt verlängerbar.</span>
+              <span class="difficulty-title" data-i18n="diffEasy"></span>
+              <span class="difficulty-desc" data-i18n="diffEasyDesc"></span>
             </label>
-            <label class="difficulty">
+            <label class="difficulty difficulty-normal">
               <input type="radio" name="difficulty" value="normal" />
-              <span class="difficulty-title">Normal</span>
-              <span class="difficulty-desc">Kurze Wartezeit vorm Wegklicken, max. 2x verlängern.</span>
+              <span class="difficulty-title" data-i18n="diffNormal"></span>
+              <span class="difficulty-desc" data-i18n="diffNormalDesc"></span>
             </label>
-            <label class="difficulty">
+            <label class="difficulty difficulty-strict">
               <input type="radio" name="difficulty" value="streng" />
-              <span class="difficulty-title">Streng</span>
-              <span class="difficulty-desc">Kein Verlängern — nach Ablauf wird der PC gesperrt.</span>
+              <span class="difficulty-title" data-i18n="diffStrict"></span>
+              <span class="difficulty-desc" data-i18n="diffStrictDesc"></span>
             </label>
           </div>
         </section>
 
-        <section class="card">
-          <h2>Allgemein</h2>
-          <div class="field">
-            <label for="theme">Design</label>
-            <select id="theme">
-              <option value="system">System</option>
-              <option value="light">Hell</option>
-              <option value="dark">Dunkel</option>
-            </select>
+        <section class="section">
+          <h2 class="section-label" data-i18n="sectionGeneral"></h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="theme" data-i18n="themeLabel"></label>
+              <select id="theme">
+                <option value="system" data-i18n="themeSystem"></option>
+                <option value="light" data-i18n="themeLight"></option>
+                <option value="dark" data-i18n="themeDark"></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="language" data-i18n="languageLabel"></label>
+              <select id="language">
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+              </select>
+            </div>
           </div>
           <div class="field checkbox-field">
             <label>
               <input type="checkbox" id="autostart" />
-              Mit dem System starten
+              <span data-i18n="autostartLabel"></span>
             </label>
+          </div>
+          <div class="field checkbox-field">
+            <label>
+              <input type="checkbox" id="overlay-always" />
+              <span data-i18n="overlayAlwaysLabel"></span>
+            </label>
+            <small data-i18n="overlayAlwaysHint"></small>
           </div>
         </section>
 
         <footer>
-          <button type="submit" id="save-btn">Speichern</button>
+          <button type="submit" id="save-btn" data-i18n="save"></button>
           <span id="save-status" role="status"></span>
         </footer>
       </form>

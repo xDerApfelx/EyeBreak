@@ -4,7 +4,7 @@ use tauri::{AppHandle, Emitter, LogicalPosition, LogicalSize, Manager, WebviewWi
 
 pub const OVERLAY_LABEL: &str = "overlay";
 const OVERLAY_WIDTH: f64 = 380.0;
-const OVERLAY_HEIGHT: f64 = 150.0;
+const OVERLAY_HEIGHT: f64 = 175.0;
 const MARGIN: f64 = 16.0;
 /// So lange muss der Cursor über dem Overlay verweilen, bevor es interaktiv wird —
 /// verhindert, dass ein kurzes Drüberfahren im Spiel Klicks schluckt.
@@ -21,7 +21,7 @@ pub fn create_overlay_window(app: &AppHandle) -> tauri::Result<()> {
         OVERLAY_LABEL,
         tauri::WebviewUrl::App("overlay.html".into()),
     )
-    .title("AugenSchonen Overlay")
+    .title("EyeBreak Overlay")
     .inner_size(OVERLAY_WIDTH, OVERLAY_HEIGHT)
     .transparent(true)
     .decorations(false)

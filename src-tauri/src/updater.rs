@@ -11,8 +11,7 @@ use std::time::Duration;
 use tauri::AppHandle;
 
 /// "owner/repo" auf GitHub. None = Update-Check deaktiviert.
-/// Nach dem Anlegen des GitHub-Repos hier eintragen, z.B. Some("mein-user/AugenSchonen").
-pub const UPDATE_REPO: Option<&str> = None;
+pub const UPDATE_REPO: Option<&str> = Some("xDerApfelx/EyeBreak");
 
 /// URL der neuesten Release-Seite, sobald ein Update gefunden wurde.
 pub static LATEST_RELEASE_URL: RwLock<Option<String>> = RwLock::new(None);

@@ -10,7 +10,6 @@ EyeBreak is a tiny tray app that reminds you to look away from your screen every
 
 <p align="center">
   <img src="docs/screenshot-settings.png" width="380" alt="Settings window" />
-  <img src="docs/screenshot-overlay.png" width="380" alt="Overlay countdown" />
 </p>
 
 ## Table of Contents
